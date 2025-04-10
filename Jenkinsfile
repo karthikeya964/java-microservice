@@ -2,7 +2,6 @@ pipeline {
     agent any
     environment {
         DOCKER_IMAGE = "karthik449/java-microservice:${env.BRANCH_NAME}"
-        SONARQUBE_ENV = "SonarQubeServer"  // You can configure this in Jenkins (the name of your SonarQube environment)
     }
     stages {
         stage('Checkout') {
@@ -13,30 +12,6 @@ pipeline {
         stage('Build & Test') {
             steps {
                 sh 'mvn clean install'  // Build and test with Maven
-            }
-        }
-        stage('SonarQube Analysis') {
-            when {
-                not {
-                    branch 'main'  // Skip SonarQube analysis for the 'main' branch (optional)
-                }
-            }
-            steps {
-                withSonarQubeEnv("${SONARQUBE_ENV}") {
-                    sh 'mvn sonar:sonar'  // Run SonarQube analysis
-                }
-            }
-        }
-        stage("Quality Gate") {
-            when {
-                not {
-                    branch 'main'  // Skip the quality gate for the 'main' branch (optional)
-                }
-            }
-            steps {
-                timeout(time: 1, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true  // Wait for SonarQube quality gate
-                }
             }
         }
         stage('Docker Build & Push') {

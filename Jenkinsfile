@@ -1,8 +1,6 @@
 pipeline {
     agent any
     environment {
-        // Replace 'your_image_registry' with your Docker registry (e.g., 'docker.io', 'gcr.io', etc.)
-        // Replace 'your_image_name' with your Docker image name (e.g., 'java-microservice')
         DOCKER_IMAGE = "karthikeya964/java-microservice"
         DOCKER_TAG = "latest"
         K8S_NAMESPACE = "default"

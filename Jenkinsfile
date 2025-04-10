@@ -9,7 +9,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // Build Java application using Maven
+                 
                     sh 'mvn clean install'
                 }
             }
@@ -20,7 +20,7 @@ pipeline {
             }
             steps {
                 script {
-                    // Build Docker image from Dockerfile
+            
                     sh 'docker build -t $DOCKER_IMAGE:$DOCKER_TAG .'
                 }
             }
@@ -31,7 +31,7 @@ pipeline {
             }
             steps {
                 script {
-                    // Push Docker image to your Docker registry
+        
                     sh 'docker push $DOCKER_IMAGE:$DOCKER_TAG'
                 }
             }
@@ -42,8 +42,7 @@ pipeline {
             }
             steps {
                 script {
-                    // Apply Kubernetes manifests for deployment
-                    // Make sure kubernetes/deployment.yaml and kubernetes/service.yaml exist and are correctly configured
+               
                     sh 'kubectl apply -f kubernetes/deployment.yaml'
                     sh 'kubectl apply -f kubernetes/service.yaml'
                 }

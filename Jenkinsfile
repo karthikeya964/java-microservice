@@ -1,42 +1,54 @@
 pipeline {
     agent any
     environment {
-        DOCKER_IMAGE = "karthik449/java-microservice:${env.BRANCH_NAME}"
+        // Replace 'your_image_registry' with your Docker registry (e.g., 'docker.io', 'gcr.io', etc.)
+        // Replace 'your_image_name' with your Docker image name (e.g., 'java-microservice')
+        DOCKER_IMAGE = "karthikeya964/java-microservice"
+        DOCKER_TAG = "latest"
+        K8S_NAMESPACE = "default"
     }
     stages {
-        stage('Checkout') {
+        stage('Build') {
             steps {
-                checkout scm  // Checkout the code from the GitHub repository
+                script {
+                    // Build Java application using Maven
+                    sh 'mvn clean install'
+                }
             }
         }
-        stage('Build & Test') {
-            steps {
-                sh 'mvn clean install'  // Build and test with Maven
-            }
-        }
-        stage('Docker Build & Push') {
+        stage('Docker Build') {
             when {
-                branch 'develop'  // Only build and push Docker image for the 'develop' branch
+                branch 'develop'
             }
             steps {
-                sh 'docker build -t $DOCKER_IMAGE .'  // Build the Docker image
-                withCredentials([usernamePassword(credentialsId: 'docker-hub-cred', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    sh """
-                        echo $PASSWORD | docker login -u $USERNAME --password-stdin  // Login to DockerHub
-                        docker push $DOCKER_IMAGE  // Push Docker image to registry
-                    """
+                script {
+                    // Build Docker image from Dockerfile
+                    sh 'docker build -t $DOCKER_IMAGE:$DOCKER_TAG .'
+                }
+            }
+        }
+        stage('Push to Docker Registry') {
+            when {
+                branch 'develop'
+            }
+            steps {
+                script {
+                    // Push Docker image to your Docker registry
+                    sh 'docker push $DOCKER_IMAGE:$DOCKER_TAG'
                 }
             }
         }
         stage('Deploy to Kubernetes') {
             when {
-                branch 'develop'  // Only deploy to Kubernetes for the 'develop' branch
+                branch 'develop'
             }
             steps {
-                sh '''
-                    kubectl apply -f k8s/deployment.yaml  // Apply Kubernetes deployment
-                    kubectl apply -f k8s/service.yaml  // Apply Kubernetes service
-                '''
+                script {
+                    // Apply Kubernetes manifests for deployment
+                    // Make sure kubernetes/deployment.yaml and kubernetes/service.yaml exist and are correctly configured
+                    sh 'kubectl apply -f kubernetes/deployment.yaml'
+                    sh 'kubectl apply -f kubernetes/service.yaml'
+                }
             }
         }
     }

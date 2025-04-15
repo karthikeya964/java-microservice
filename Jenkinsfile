@@ -45,8 +45,8 @@ pipeline {
             }
             steps {
                 script {
-                    sh 'kubectl apply -f kubernetes/deployment.yaml'
-                    sh 'kubectl apply -f kubernetes/service.yaml'
+                    sh 'kubectl apply -f kubernetes/deployment.yaml --insecure-skip-tls-verify=true'
+                    sh 'kubectl apply -f kubernetes/service.yaml --insecure-skip-tls-verify=true '
                 }
             }
         }

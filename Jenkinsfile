@@ -32,7 +32,9 @@ pipeline {
             steps {
                 script {
         
-                    sh 'docker push $DOCKER_IMAGE:$DOCKER_TAG'
+                     withCredentials([usernamePassword(credentialsId: 'docke-hub-cred', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
+                sh "docker push $DOCKER_IMAGE:$DOCKER_TAG"
                 }
             }
         }

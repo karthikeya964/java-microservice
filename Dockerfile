@@ -3,7 +3,7 @@ FROM openjdk:11-jre-slim
 
 WORKDIR /app
 
-COPY target/your-application.jar /app/app.jar
+COPY target/java-microservice-1.0-SNAPSHOT.jar /app/app.jar
 
 # Expose the port the app runs on
 EXPOSE 9090

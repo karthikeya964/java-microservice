@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        DOCKER_IMAGE = "karthikeya449/java-microservice"
+        DOCKER_IMAGE = "karthik449/java-microservice"
         DOCKER_TAG = "latest"
         K8S_NAMESPACE = "default"
     }

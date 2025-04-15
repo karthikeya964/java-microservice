@@ -1,4 +1,3 @@
-GNU nano 4.8                                              deployment.yaml                                                         
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,7 +13,7 @@ spec:
         app: java-app
     spec:
       containers:
-      - name: java-container
-        image: karthik449/java-microservice:develop
-        ports:
-        - containerPort: 9090
+        - name: java-container
+          image: karthik449/java-microservice:develop
+          ports:
+            - containerPort: 9090
